@@ -1,0 +1,26 @@
+{% extends "webui/base.html" %}
+{% block content %}
+
+<h2 class="text-xl font-semibold mb-4">Logs de Execução</h2>
+
+{% if logs %}
+<div class="space-y-4">
+    {% for log in logs %}
+    <div class="bg-white p-4 shadow rounded">
+        <p class="font-bold text-indigo-700">
+            {{ log.event }} → {{ log.action }}
+        </p>
+        <p class="text-sm text-gray-500">
+            {{ log.timestamp }}
+        </p>
+        <pre class="mt-2 bg-gray-100 p-3 rounded overflow-x-auto text-sm">
+{{ log.payload }}
+        </pre>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+    <p class="text-gray-700">Nenhum log registrado ainda.</p>
+{% endif %}
+
+{% endblock %}

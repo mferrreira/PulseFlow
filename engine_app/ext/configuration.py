@@ -1,0 +1,12 @@
+from dynaconf import FlaskDynaconf
+
+def init_app(app):
+    FlaskDynaconf(
+        app,
+        settings_files=[
+            "settings.toml",
+            ".secrets.toml"
+        ],
+        load_dotenv=True,
+        environments=True,
+    )

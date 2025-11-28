@@ -1,0 +1,31 @@
+{% extends "webui/base.html" %}
+{% block content %}
+
+<h2 class="text-xl font-semibold mb-4">Criar Nova Regra</h2>
+
+<form method="POST" 
+      class="bg-white p-6 shadow rounded space-y-4 max-w-xl">
+
+    <div>
+        <label class="block font-medium mb-1">Evento</label>
+        <input name="event" 
+               class="w-full border px-3 py-2 rounded focus:ring focus:ring-indigo-200"
+               placeholder="ex: user.registered"
+               required>
+    </div>
+
+    <div>
+        <label class="block font-medium mb-1">Ação</label>
+        <input name="action"
+               class="w-full border px-3 py-2 rounded focus:ring focus:ring-indigo-200"
+               placeholder="ex: log_action"
+               required>
+    </div>
+
+    <button class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">
+        Criar Regra
+    </button>
+
+</form>
+
+{% endblock %}
