@@ -3,33 +3,85 @@
 <head>
     <meta charset="UTF-8">
     <title>PulseFlow</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    dropShadow: {
+                        glow: '0 8px 24px rgba(79, 70, 229, 0.25)',
+                    }
+                }
+            }
+        }
+    </script>
 </head>
 
-<body class="bg-gray-100 text-gray-900">
+<body class="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-indigo-100 text-gray-900">
+    <div class="min-h-screen flex flex-col">
 
-    <!-- NAVBAR -->
-    <nav class="bg-white shadow mb-8">
-        <div class="max-w-5xl mx-auto px-4 py-4 flex justify-between items-center">
-            <h1 class="text-2xl font-bold text-indigo-600">PulseFlow</h1>
+        <!-- NAVBAR -->
+        <nav class="bg-white/90 backdrop-blur border-b border-indigo-50 shadow-sm">
+            {% set endpoint = request.endpoint %}
+            <div class="max-w-6xl mx-auto px-4 py-4 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                <div>
+                    <p class="text-xs tracking-[0.3em] uppercase text-indigo-400 font-semibold">PulseFlow</p>
+                    <h1 class="text-2xl md:text-3xl font-bold text-indigo-700 leading-tight">
+                        Engine de Automação
+                    </h1>
+                </div>
 
-            <div class="flex gap-6 text-gray-700">
-                <a href="{{ url_for('webui.home') }}" 
-                   class="hover:text-indigo-600 transition">Regras</a>
-
-                <a href="{{ url_for('webui.simulate_page') }}" 
-                   class="hover:text-indigo-600 transition">Simular Evento</a>
-
-                <a href="{{ url_for('webui.logs_page') }}" 
-                   class="hover:text-indigo-600 transition">Logs</a>
+                <div class="flex flex-wrap gap-3 text-sm font-medium">
+                    <a href="{{ url_for('webui.home') }}"
+                       class="px-4 py-2 rounded-full border border-transparent transition {{ 'bg-indigo-100 text-indigo-700 shadow-sm' if endpoint == 'webui.home' else 'text-gray-700 hover:text-indigo-700 hover:bg-indigo-50' }}">
+                        Regras
+                    </a>
+                    <a href="{{ url_for('webui.simulate_page') }}"
+                       class="px-4 py-2 rounded-full transition {{ 'bg-indigo-100 text-indigo-700 shadow-sm' if endpoint == 'webui.simulate_page' else 'text-gray-700 hover:text-indigo-700 hover:bg-indigo-50' }}">
+                        Simular Evento
+                    </a>
+                    <a href="{{ url_for('webui.logs_page') }}"
+                       class="px-4 py-2 rounded-full transition {{ 'bg-indigo-100 text-indigo-700 shadow-sm' if endpoint == 'webui.logs_page' else 'text-gray-700 hover:text-indigo-700 hover:bg-indigo-50' }}">
+                        Logs
+                    </a>
+                </div>
             </div>
-        </div>
-    </nav>
+        </nav>
 
-    <!-- MAIN CONTENT -->
-    <main class="max-w-5xl mx-auto px-4">
-        {% block content %}{% endblock %}
-    </main>
+        <!-- HERO -->
+        <header class="px-4">
+            <div class="max-w-6xl mx-auto py-10 flex flex-col gap-4 text-center md:text-left">
+                <p class="text-sm uppercase tracking-[0.2em] text-indigo-400 font-semibold">
+                    Observabilidade • Regras • Escalabilidade
+                </p>
+                <h2 class="text-3xl md:text-4xl font-semibold text-gray-900 leading-tight">
+                    Automatize fluxos de eventos com clareza e sinal visual moderno.
+                </h2>
+                <p class="text-gray-600 text-base md:text-lg max-w-3xl">
+                    Crie regras, simule cenários e inspecione logs sem sair deste painel minimalista.
+                    A paleta indigo guia cada ação com contraste suave e profissional.
+                </p>
+            </div>
+        </header>
 
+        <!-- MAIN CONTENT -->
+        <main class="flex-1 w-full px-4 pb-12">
+            <div class="max-w-6xl mx-auto bg-white/90 rounded-3xl shadow-2xl drop-shadow-glow border border-indigo-100">
+                <div class="p-6 md:p-10 space-y-8">
+                    {% block content %}{% endblock %}
+                </div>
+            </div>
+        </main>
+
+        <footer class="px-4 pb-8 text-center text-sm text-gray-500">
+            <p> Desenvolvido por Márcio Martins • {{ current_year | default(2025) }}</p>
+        </footer>
+    </div>
 </body>
 </html>

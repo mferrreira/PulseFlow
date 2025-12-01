@@ -9,7 +9,12 @@ def log_action(payload):
 def send_email(payload):
     print("Email fake enviado:", payload)
 
+def send_message(payload):
+    log_action(payload)
+    print("enviando mensagem...")
+
 AVAILABLE_ACTIONS = {
     "log_action": log_action,
     "send_email": send_email,
+    "send_message": send_message,
 }

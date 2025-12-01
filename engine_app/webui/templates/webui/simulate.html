@@ -1,30 +1,68 @@
 {% extends "webui/base.html" %}
+
 {% block content %}
 
-<h2 class="text-xl font-semibold mb-4">Simular Evento</h2>
+<section class="space-y-10">
+    <div class="grid gap-10 md:grid-cols-2">
+        <div class="space-y-5">
+            <p class="text-xs uppercase tracking-[0.4em] text-indigo-400 font-semibold">Testes controlados</p>
+            <h2 class="text-3xl font-semibold text-gray-900">Simular Evento</h2>
+            <p class="text-gray-600">
+                Gere sinais artificiais para validar regras em tempo real. O simulador envia o evento diretamente para o
+                barramento da engine, disparando ações cadastradas e registrando o resultado em logs.
+            </p>
 
-<form method="POST"
-      class="bg-white p-6 shadow rounded max-w-xl space-y-4">
+            <div class="space-y-4">
+                <div class="flex gap-3">
+                    <span class="w-10 h-10 rounded-full bg-indigo-100 text-indigo-600 font-semibold flex items-center justify-center">1</span>
+                    <div>
+                        <p class="font-semibold text-gray-900">Escolha o evento</p>
+                        <p class="text-sm text-gray-600">Use nomes existentes para acionar regras reais ou crie novos para testar cenários futuros.</p>
+                    </div>
+                </div>
+                <div class="flex gap-3">
+                    <span class="w-10 h-10 rounded-full bg-indigo-100 text-indigo-600 font-semibold flex items-center justify-center">2</span>
+                    <div>
+                        <p class="font-semibold text-gray-900">Monte o payload</p>
+                        <p class="text-sm text-gray-600">Defina um JSON válido que represente o contexto do evento.</p>
+                    </div>
+                </div>
+                <div class="flex gap-3">
+                    <span class="w-10 h-10 rounded-full bg-indigo-100 text-indigo-600 font-semibold flex items-center justify-center">3</span>
+                    <div>
+                        <p class="font-semibold text-gray-900">Dispare e monitore</p>
+                        <p class="text-sm text-gray-600">Confira o resultado na lista de logs para validar o comportamento.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-    <div>
-        <label class="block font-medium mb-1">Evento</label>
-        <input name="event"
-               class="w-full border px-3 py-2 rounded focus:ring focus:ring-indigo-200"
-               placeholder="ex: user.registered"
-               required>
+        <form method="POST"
+              class="bg-white border border-indigo-100 rounded-3xl p-6 md:p-8 shadow-lg space-y-6">
+
+            <div class="space-y-2">
+                <label class="block text-sm font-semibold text-gray-700 uppercase tracking-widest">Evento</label>
+                <input name="event"
+                       class="w-full px-4 py-3 rounded-2xl border border-indigo-100 bg-indigo-50/50 focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:border-indigo-300 transition"
+                       placeholder="ex: user.registered"
+                       required>
+            </div>
+
+            <div class="space-y-2">
+                <label class="block text-sm font-semibold text-gray-700 uppercase tracking-widest">Payload</label>
+                <textarea name="payload"
+                          class="w-full h-40 px-4 py-3 rounded-2xl border border-indigo-100 bg-indigo-50/50 focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:border-indigo-300 transition"
+                          placeholder='ex: {"username": "marcio"}'></textarea>
+                <p class="text-xs text-gray-500">
+                    É recomendado enviar JSON válido. Campos vazios resultam em payload vazio.
+                </p>
+            </div>
+
+            <button class="w-full inline-flex items-center justify-center px-8 py-3 rounded-full bg-indigo-600 text-white font-semibold shadow-lg hover:bg-indigo-700 transition drop-shadow-glow">
+                Disparar Evento
+            </button>
+        </form>
     </div>
-
-    <div>
-        <label class="block font-medium mb-1">Payload</label>
-        <textarea name="payload"
-                  class="w-full border px-3 py-2 rounded focus:ring focus:ring-indigo-200"
-                  placeholder='ex: {"username": "marcio"}'></textarea>
-    </div>
-
-    <button class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">
-        Disparar Evento
-    </button>
-
-</form>
+</section>
 
 {% endblock %}
