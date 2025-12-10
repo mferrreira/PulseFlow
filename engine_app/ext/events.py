@@ -12,5 +12,7 @@ class EventBus:
 event_bus = EventBus()
 
 def init_app(app):
-    from engine_app.services.engine.engine import register_engine
-    register_engine(event_bus)
+    if not hasattr(app, "extensions"):
+        app.extensions = {}
+
+    app.extensions["event_bus"] = event_bus

@@ -154,6 +154,18 @@ Contém o **EventBus**, implementando um sistema publish/subscribe.
 
 Usa **Dynaconf** para carregar configs externas.
 
+### ✔ `events.py`
+
+Expõe um `EventBus` leve que pode ser compartilhado por toda a aplicação via `app.extensions["event_bus"]`.
+
+### ✔ `engine.py`
+
+Publica o serviço central da engine (ver abaixo) em `app.extensions["engine"]`, permitindo que qualquer plugin registre triggers ou actions durante o `init_app`.
+
+### ✔ Plugins (ex.: `whatsapp.py`)
+
+Extensões opcionais podem se registrar no engine service, expondo seus próprios triggers/actions sem tocar no core. Basta implementar `init_app(app)` e usar `app.extensions["engine"]` para chamar `register_trigger(...)` ou `register_action(...)`.
+
 ---
 
 # ⚙️ **5. Engine de Automação**
@@ -162,33 +174,35 @@ Local: `services/engine/`
 
 Componentes:
 
-### **1. triggers**
+### **1. `engine.py` (EngineService)**
 
-Funções que definem eventos disparáveis pelo sistema.
+* Mantém registries em memória para **triggers** e **actions**.
+* Expõe `register_trigger()` e `register_action()`, usados pelos módulos internos e plugins.
+* Inscreve cada trigger no `EventBus` e orquestra o dispatch de ações consultando o banco (`Rule`).
 
-### **2. actions**
+### **2. `triggers.py` / `actions.py`**
 
-Funções executadas quando regras são atendidas.
+* Em vez de manter dicionários globais, esses módulos agora têm `init_app(app)` e utilizam o EngineService para registrar seus itens padrão.
+* Para adicionar um evento/ação builtin, basta criar uma classe trigger (com `key` e opcional `handle`) ou uma função action e registrá-las no `init_app`.
 
-### **3. engine**
+### **3. Plugins externos (`ext/*.py`)**
 
-Core da automação:
-
-* consulta regras no banco
-* executa ações
-* registra logs
-* conecta-se ao EventBus
+* Cada plugin pode, durante o `init_app`, obter o engine via `app.extensions["engine"]` e registrar seus próprios triggers/actions.
+* Exemplo: `ext/whatsapp.py` define `WhatsAppTrigger` e registra a action `send_whatsapp_message` apontando para o serviço real, sem alterar arquivos dentro de `services/engine/`.
 
 Fluxo:
 
 ```
+Plugin/engine registra trigger →
+EventBus inscreve callback →
 Evento ocorre →
-EventBus captura →
-Engine consulta regras →
-Executa ações →
-Registra logs →
-Retorna resposta
+Engine consulta regras (DB) →
+Resolve action pelo registry →
+Executa action →
+Registra efeitos (logs, integrações etc.)
 ```
+
+> ✅ O front-end WebUI não precisa ser alterado quando novos plugins surgem: as páginas continuam apenas criando regras (evento → ação) com base nas chaves expostas pelos plugins/engine. Isso reforça o baixo acoplamento entre UI e core.
 
 ---
 

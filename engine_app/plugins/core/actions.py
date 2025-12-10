@@ -1,5 +1,5 @@
-from engine_app.models.log import Log
 from engine_app.ext.database import db
+from engine_app.models.log import Log
 
 def log_action(payload):
     log = Log(event=payload["event"], action="log_action", payload=str(payload))
@@ -9,12 +9,12 @@ def log_action(payload):
 def send_email(payload):
     print("Email fake enviado:", payload)
 
-def send_message(payload):
+def send_telegram_message(payload):
     log_action(payload)
-    print("enviando mensagem...")
+    print("ENVIANDO MENSAGEM NO TELEGRAM")
 
-AVAILABLE_ACTIONS = {
-    "log_action": log_action,
-    "send_email": send_email,
-    "send_message": send_message,
-}
+
+def init_app(app):
+    engine = app.extensions["engine"]
+    engine.register_action("log_action", log_action)
+    engine.register_action("send_email", send_email)

@@ -1,3 +1,6 @@
+import ast
+import json
+
 from flask import Blueprint, render_template, request, redirect, url_for
 from engine_app.models.rule import Rule
 from engine_app.models.log import Log
@@ -36,7 +39,28 @@ def simulate_page():
 @webui_bp.post("/simulate")
 def simulate_submit():
     event = request.form["event"]
-    payload = {"info": request.form["payload"] or ""}
+    raw_payload = request.form.get("payload", "").strip()
+
+    info_payload = {}
+    if raw_payload:
+        parsed = None
+
+        for parser in (json.loads, ast.literal_eval):
+            if parsed is not None:
+                break
+            try:
+                candidate = parser(raw_payload)
+            except Exception:
+                continue
+            if isinstance(candidate, dict):
+                parsed = candidate
+
+        if parsed is None:
+            info_payload = {"message": raw_payload}
+        else:
+            info_payload = parsed
+
+    payload = {"info": info_payload}
     event_bus.publish(event, payload)
     return redirect(url_for("webui.simulate_page"))
 
